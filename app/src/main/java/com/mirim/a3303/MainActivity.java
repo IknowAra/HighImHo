@@ -97,23 +97,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        FileOutputStream fos = null;
-        try {
-            fos = openFileOutput("myFile2.dat",Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        DataOutputStream dos = new DataOutputStream(fos);
-
-        try {
-            dos.writeUTF("문자열");
-            dos.flush();
-            dos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
 
 
     }
