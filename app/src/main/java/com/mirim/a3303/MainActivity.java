@@ -2,15 +2,10 @@ package com.mirim.a3303;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,22 +15,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Array;
-import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static android.os.Environment.getExternalStorageDirectory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 String key = et.getText().toString();
 
-                                Intent gotoSecret = new Intent(MainActivity.this, InputData.class);
+                                Intent gotoSecret = new Intent(MainActivity.this, InputDataActivity.class);
                                 startActivity(gotoSecret);
                             }
                         });
@@ -91,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         add_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gotoInputData = new Intent(getApplicationContext(), InputData.class);
+                Intent gotoInputData = new Intent(getApplicationContext(), InputDataActivity.class);
                 startActivity(gotoInputData);
             }
         });

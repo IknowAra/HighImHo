@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Choreographer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,10 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-public class InputData extends AppCompatActivity {
+public class InputDataActivity extends AppCompatActivity {
 
     // 19개 200-218
     String[] CHO = {"ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ", "ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"};
@@ -47,7 +43,6 @@ public class InputData extends AppCompatActivity {
 
         Button save = findViewById(R.id.save);
 
-        setBoard(new ArrayList<Integer>(Arrays.asList(108,200,63)));
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,20 +57,21 @@ public class InputData extends AppCompatActivity {
                 if (titleStr.length() > 0 && keyStr.length() > 0 && contentStr.length() > 0) {
                     if(!searchData(titleStr)){ //중복값이 없을때
 
+                        ArrayList<Integer> keyBoard = (ArrayList<Integer>) setBoard(chrToAscii(contentStr));
 
-                        Intent gotoMain = new Intent(InputData.this, MainActivity.class);
+                        Intent gotoMain = new Intent(InputDataActivity.this, MainActivity.class);
                         gotoMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(gotoMain);
 
                     }else{
-                        Toast.makeText(InputData.this, "중복된 제목입니다 다른 제목을 입력해주세요!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InputDataActivity.this, "중복된 제목입니다 다른 제목을 입력해주세요!", Toast.LENGTH_SHORT).show();
                     }
                 } else if (titleStr.length() == 0){
-                    Toast.makeText(InputData.this, "제목을 입력해주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InputDataActivity.this, "제목을 입력해주세요", Toast.LENGTH_SHORT).show();
                 } else if (keyStr.length() == 0){
-                    Toast.makeText(InputData.this, "암호키를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InputDataActivity.this, "암호키를 입력해주세요", Toast.LENGTH_SHORT).show();
                 } else if (contentStr.length() == 0){
-                    Toast.makeText(InputData.this, "내용을 입력해주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InputDataActivity.this, "내용을 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
             }
         });
