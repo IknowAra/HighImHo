@@ -5,5 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MemoActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/textv"
+        android:text="ex"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

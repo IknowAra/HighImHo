@@ -55,7 +55,11 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 String key = et.getText().toString();
 
-                                Intent gotoSecret = new Intent(MainActivity.this, InputDataActivity.class);
+
+                                Intent gotoSecret = new Intent(MainActivity.this, MemoActivity.class);
+                                gotoSecret.putExtra("fileName",selected_item);
+                                gotoSecret.putExtra("key",key);
+
                                 startActivity(gotoSecret);
                             }
                         });

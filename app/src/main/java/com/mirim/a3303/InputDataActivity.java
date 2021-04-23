@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 
 public class InputDataActivity extends AppCompatActivity {
 
+    final ArrayList<Integer> usingNum = new ArrayList<Integer>(Arrays.asList(97 , 98 , 99 , 100 , 101 , 102 , 103 , 104 , 105 , 106 , 107 , 108 , 109 , 110 , 111 , 112 , 113 , 114 , 115 , 116 , 117 , 118 , 119 , 120 , 121 , 122 , 200 , 201 , 202 , 203 , 204 , 205 , 206 , 207 , 208 , 209 , 210 , 211 , 212 , 213 , 214 , 215 , 216 , 217 , 218 , 300 , 301 , 302 , 303 , 304 , 305 , 306 , 307 , 308 , 309 , 310 , 311 , 312 , 313 , 314 , 315 , 316 , 317 , 318 , 319 , 320 , 400 , 401 , 402 , 403 , 404 , 405 , 406 , 407 , 408 , 409 , 410 , 411 , 412 , 413 , 414 , 415 , 416 , 417 , 418 , 419 , 420 , 421 , 422 , 423 , 424 , 425 , 426 , 427, 126, 33, 63, 46, 44, 32));
     // 19개 200-218
     String[] CHO = {"ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ", "ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"};
     // 21개 300-320
@@ -56,8 +58,8 @@ public class InputDataActivity extends AppCompatActivity {
 
                 if (titleStr.length() > 0 && keyStr.length() > 0 && contentStr.length() > 0) {
                     if(!searchData(titleStr)){ //중복값이 없을때
-
-                        ArrayList<Integer> keyBoard = (ArrayList<Integer>) setBoard(chrToAscii(contentStr));
+                        ArrayList<Integer[]> aaa = addX(chrToAscii(contentStr));
+                        ArrayList<Integer[]> keyBoard = (ArrayList<Integer[]>) setBoard(chrToAscii(contentStr));
 
                         Intent gotoMain = new Intent(InputDataActivity.this, MainActivity.class);
                         gotoMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -115,25 +117,49 @@ public class InputDataActivity extends AppCompatActivity {
                 result.add((int)jong+400); //종성은 400번대
             }else{
                 //한글이 아닐때 처리
-                result.add((int)one); //아스키코드값 그대로를 삽입
+
+                if(usingNum.contains((int)one)){ //암호화 대상 글자일경우
+                    result.add((int)one); //아스키코드값 삽입
+                    Log.d("!",(int)one+"");
+                }
             }
 
         }
-
         return result; //리턴
+    }
+
+    //홀수문자와 연속문자사이에 x를 추가하는 메서드
+    private ArrayList<Integer[]> addX(ArrayList<Integer> asciiNum){
+        ArrayList<Integer[]> twinData = new ArrayList<Integer[]>(); // 2xn 2차원배열로 쌍자생성
+        int i = 1; // while문 처리 변수
+        while(asciiNum.size()>i){ // 배열 길이까지 반복
+            //중복 글자일 경우
+            if(asciiNum.get(i-1)==asciiNum.get(i)){
+                twinData.add(new Integer[]{ asciiNum.get(i-1),120 }); //중복 첫글자와 X의 아스키코드 120을 추가
+                i++; //X를 추가했기 때문에 1만 추가
+
+            }else{ //중복 글자가 아닐 경우
+                twinData.add(new Integer[]{ asciiNum.get(i-1),asciiNum.get(i) }); //두 글자 추가
+                i+=2; //둘다 추가했기 때문에 2 추가
+            }
+        }
+
+        if(asciiNum.size()==i){
+            twinData.add(new Integer[]{asciiNum.get(asciiNum.size()-1),120});
+        }
+
+        return twinData;
     }
 
 
     // 암호판을 2차원 배열로 리턴하는 메서드
-    private static ArrayList<Integer[]> setBoard(ArrayList<Integer> asciiNum) {
-        //암호판을 만들 문자열의 아스키코드 값만 모아둔 리스트
-        final ArrayList<Integer> usingNum = new ArrayList<Integer>(Arrays.asList(97 , 98 , 99 , 100 , 101 , 102 , 103 , 104 , 105 , 106 , 107 , 108 , 109 , 110 , 111 , 112 , 113 , 114 , 115 , 116 , 117 , 118 , 119 , 120 , 121 , 122 , 200 , 201 , 202 , 203 , 204 , 205 , 206 , 207 , 208 , 209 , 210 , 211 , 212 , 213 , 214 , 215 , 216 , 217 , 218 , 300 , 301 , 302 , 303 , 304 , 305 , 306 , 307 , 308 , 309 , 310 , 311 , 312 , 313 , 314 , 315 , 316 , 317 , 318 , 319 , 320 , 400 , 401 , 402 , 403 , 404 , 405 , 406 , 407 , 408 , 409 , 410 , 411 , 412 , 413 , 414 , 415 , 416 , 417 , 418 , 419 , 420 , 421 , 422 , 423 , 424 , 425 , 426 , 427, 126, 33, 63, 46, 44, 32));
+    private ArrayList<Integer[]> setBoard(ArrayList<Integer> asciiNum) {
 
         // 기존데이터 가공, 중복제거
         ArrayList<Integer> resultAll = new ArrayList<Integer>(); //결과를 담을 리스트
         for(int num : asciiNum){
             //처리하지 않는 문자와 중복된 문자를 제외하고
-            if(usingNum.contains(num) && !resultAll.contains(num)){
+            if(!resultAll.contains(num)){
                 resultAll.add(num); //데이터 추가
             }
         }
