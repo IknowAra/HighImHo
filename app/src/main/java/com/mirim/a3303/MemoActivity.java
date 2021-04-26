@@ -130,7 +130,6 @@ public class MemoActivity extends AppCompatActivity {
         while (i<numData.size()){
             try{
                 if(numData.get(i)>=200 && numData.get(i+1) >=300 && numData.get(i+2) >=400){
-                    Log.d("num",i+"");
                     cho = numData.get(i) - 200;
                     joong = numData.get(i+1) - 300;
                     jong = numData.get(i+2) - 400;
@@ -179,10 +178,11 @@ public class MemoActivity extends AppCompatActivity {
             }
         }
         // 나머지 값들을 추가
-        for(int item : usingNum){
+
+        for(int i=99; i>=0; i--){
             //중복되지 않은 값만 추가
-            if(!resultAll.contains(item))
-                resultAll.add(item);
+            if(!resultAll.contains(usingNum.get(i)))
+                resultAll.add(usingNum.get(i));
         }
 
         //2차원 배열로 10x10 암호판을 만듦
@@ -190,6 +190,7 @@ public class MemoActivity extends AppCompatActivity {
         for(int i = 0; i<100; i+=10){
             //리스트와 배열을 합친 2차원배열에 행 삽입
             results.add(new Integer[]{resultAll.get(i),resultAll.get(i+1),resultAll.get(i+2),resultAll.get(i+3),resultAll.get(i+4),resultAll.get(i+5),resultAll.get(i+6),resultAll.get(i+7),resultAll.get(i+8),resultAll.get(i+9)});
+            Log.d("암호판 ",resultAll.get(i)+" "+resultAll.get(i+1)+" "+resultAll.get(i+2)+" "+resultAll.get(i+3)+" "+resultAll.get(i+4)+" "+resultAll.get(i+5)+" "+resultAll.get(i+6)+" "+resultAll.get(i+7)+" "+resultAll.get(i+8)+" "+resultAll.get(i+9));
         }
 
         return results; //리턴
@@ -216,7 +217,6 @@ public class MemoActivity extends AppCompatActivity {
 
                 if(usingNum.contains((int)one)){ //암호화 대상 글자일경우
                     result.add((int)one); //아스키코드값 삽입
-                    Log.d("!",(int)one+"");
                 }
             }
 

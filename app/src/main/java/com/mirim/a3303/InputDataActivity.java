@@ -50,7 +50,6 @@ public class InputDataActivity extends AppCompatActivity {
                 titleStr = titleStr.trim().toLowerCase();
                 keyStr = keyStr.trim().toLowerCase();
                 contentStr = contentStr.trim().toLowerCase();
-                Log.d("hey",contentStr);
 
                 if (titleStr.length() > 0 && keyStr.length() > 0 && contentStr.length() > 0) {
                     if(!searchData(titleStr)){ //중복값이 없을때
@@ -97,7 +96,6 @@ public class InputDataActivity extends AppCompatActivity {
             for(int i = 0; i<10; i++){
                 for(int j = 0; j<10; j++){
                     if(keyBoard.get(i)[j].equals(twin[0])){ //첫번째 값이 암호판에 있을경우
-                        Log.d("", keyBoard.get(i)[j]+" "+twin[0]);
                         row1 = i; //행 인덱스 값
                         col1 = j; //열 인덱스 값
                     }
@@ -148,7 +146,6 @@ public class InputDataActivity extends AppCompatActivity {
                 //한글이 아닐때 처리
                 if(usingNum.contains((int)one)){ //암호화 대상 글자일경우
                     result.add((int)one); //아스키코드값 삽입
-                    Log.d("!",(int)one+"");
                 }
             }
 
@@ -192,10 +189,11 @@ public class InputDataActivity extends AppCompatActivity {
             }
         }
         // 나머지 값들을 추가
-        for(int item : usingNum){
+
+        for(int i=99; i>=0; i--){
             //중복되지 않은 값만 추가
-            if(!resultAll.contains(item))
-                resultAll.add(item);
+            if(!resultAll.contains(usingNum.get(i)))
+                resultAll.add(usingNum.get(i));
         }
 
         //2차원 배열로 10x10 암호판을 만듦
@@ -203,6 +201,7 @@ public class InputDataActivity extends AppCompatActivity {
         for(int i = 0; i<100; i+=10){
             //리스트와 배열을 합친 2차원배열에 행 삽입
             results.add(new Integer[]{resultAll.get(i),resultAll.get(i+1),resultAll.get(i+2),resultAll.get(i+3),resultAll.get(i+4),resultAll.get(i+5),resultAll.get(i+6),resultAll.get(i+7),resultAll.get(i+8),resultAll.get(i+9)});
+            Log.d("암호판 ",resultAll.get(i)+" "+resultAll.get(i+1)+" "+resultAll.get(i+2)+" "+resultAll.get(i+3)+" "+resultAll.get(i+4)+" "+resultAll.get(i+5)+" "+resultAll.get(i+6)+" "+resultAll.get(i+7)+" "+resultAll.get(i+8)+" "+resultAll.get(i+9));
         }
 
         return results; //리턴
