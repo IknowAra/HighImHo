@@ -14,13 +14,14 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/listview"
-        android:gravity="right">
+        android:gravity="right|bottom">
 
         <Button
             android:id="@+id/add_post"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/add"/>
 
     </LinearLayout>
 

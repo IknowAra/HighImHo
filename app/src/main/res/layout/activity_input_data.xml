@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".InputDataActivity">
+
     <LinearLayout
         android:id="@+id/back_layout"
         android:layout_width="match_parent"
@@ -12,13 +13,15 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/inputArea"
-        android:gravity="left">
+        android:gravity="left|center_vertical">
 
         <Button
             android:id="@+id/back"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/arrow"
+            android:layout_marginLeft="15dp"/>
 
     </LinearLayout>
 
@@ -44,7 +47,8 @@
                 android:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"/>
+                android:layout_weight="2"
+                android:textColor="@color/white"/>
             <EditText
                 android:id="@+id/title"
                 android:hint= "제목은 암호화 되지 않습니다."
@@ -68,12 +72,13 @@
                     android:autoSizeTextType="uniform"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"/>
+                    android:layout_weight="2"
+                    android:textColor="@color/white"/>
                 <TextView
                     android:paddingLeft="10dp"
                     android:paddingRight="20dp"
                     android:paddingTop="10dp"
-                    android:text="*한글, 영어 (다양하게 쓸수록 보안 강도가 올라갑니다)\n*한글은 완성된 글자만 취급합니다."
+                    android:text="*한글, 영어 (단순하게 할 경우 암호화가 되지 않습니다!)\n*한글은 완성된 글자만 취급합니다."
                     android:autoSizeTextType="uniform"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -104,10 +109,11 @@
                 android:text="내용"
                 android:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="30dp"
+                android:textColor="@color/white"/>
             <EditText
                 android:id="@+id/contents"
-                android:hint="한글은 완성된 글자만 취급합니다.(자모음만 쓰인경우 제외됨"
+                android:hint="한글은 완성된 글자만 취급합니다.\n(자모음만 쓰인경우 제외됨)\n이외의 문자들도 제외되며,\n특수문자는 ~ ! ? . 만을 제공합니다.\n영어 대문자는 소문자로 자동 변환됩니다."
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:gravity="top"
