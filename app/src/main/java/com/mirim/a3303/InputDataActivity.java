@@ -85,20 +85,6 @@ public class InputDataActivity extends AppCompatActivity {
     }
 
 
-    // 쌍자치환 암호화 contents 리턴 메소드
-    private String makeCipher(String key, String contents){
-        String cipherSentence = null;
-
-
-
-
-
-
-
-
-        return cipherSentence;
-    }
-
     // 내용 각각의 글자의 아스키코드를 담은 리스트를 리턴하는 메서드
     private ArrayList<Integer> chrToAscii(String contents){
         ArrayList<Integer> result = new ArrayList<Integer>(); //결과를 담을 리스트(리턴할 리스트)
