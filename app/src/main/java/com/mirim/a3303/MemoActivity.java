@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.DataInputStream;
@@ -24,7 +26,7 @@ public class MemoActivity extends AppCompatActivity {
     // 21개 300-320 중성 {"ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ", "ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"}
     // 28개 400-427 종성 {"","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ", "ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"}
     // 26개 (+97) 알파벳 {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
-    // 6개 126, 33, 63, 46, 10, 32 {"~", "!", "?", ".", "\n", " "}
+    // 6개 126, 33, 63, 46, 10, 32 {"~", "!", "?", ".", "\n", ""}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,10 @@ public class MemoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        TextView tx = findViewById(R.id.textv);
+        TextView tx = findViewById(R.id.secretText);
+        Button back = findViewById(R.id.back);
+        Animation alphaAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.alpha);
+
         String fileName = intent.getExtras().getString("fileName")+".dat";
         String key = intent.getExtras().getString("key").toLowerCase();
         ArrayList<Integer[]> keyTable = setBoard(chrToAscii(key));
@@ -56,12 +61,24 @@ public class MemoActivity extends AppCompatActivity {
         }
         ArrayList<Integer> decryption = makeDecryption(keyTable,numData);
         String plainText = toRawContents(decryption);
-        tx.setText(plainText);
 
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.alpha);
-//        view.startAnimation(animation);
+        tx.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v) {
+                tx.setText(plainText);
+                tx.startAnimation(alphaAnimation);
+                return true;
+            }
+        });
+
 
     }
 
@@ -156,7 +173,6 @@ public class MemoActivity extends AppCompatActivity {
     private ArrayList<Integer[]> twinData(String data){
         ArrayList<Integer[]> twinData = new ArrayList<Integer[]>();
         String subData = data.trim();
-        Log.d("aa", subData);
         String date[] = subData.split("/");
         for(String twin : date){
             int idx = twin.indexOf(" ");
@@ -179,7 +195,8 @@ public class MemoActivity extends AppCompatActivity {
         }
         // 나머지 값들을 추가
 
-        for(int i=99; i>=0; i--){
+
+        for(int i=0; i<100; i++){
             //중복되지 않은 값만 추가
             if(!resultAll.contains(usingNum.get(i)))
                 resultAll.add(usingNum.get(i));
@@ -190,7 +207,7 @@ public class MemoActivity extends AppCompatActivity {
         for(int i = 0; i<100; i+=10){
             //리스트와 배열을 합친 2차원배열에 행 삽입
             results.add(new Integer[]{resultAll.get(i),resultAll.get(i+1),resultAll.get(i+2),resultAll.get(i+3),resultAll.get(i+4),resultAll.get(i+5),resultAll.get(i+6),resultAll.get(i+7),resultAll.get(i+8),resultAll.get(i+9)});
-            Log.d("암호판 ",resultAll.get(i)+" "+resultAll.get(i+1)+" "+resultAll.get(i+2)+" "+resultAll.get(i+3)+" "+resultAll.get(i+4)+" "+resultAll.get(i+5)+" "+resultAll.get(i+6)+" "+resultAll.get(i+7)+" "+resultAll.get(i+8)+" "+resultAll.get(i+9));
+            Log.d("입력 받은 키로 만든 암호판 ",resultAll.get(i)+" "+resultAll.get(i+1)+" "+resultAll.get(i+2)+" "+resultAll.get(i+3)+" "+resultAll.get(i+4)+" "+resultAll.get(i+5)+" "+resultAll.get(i+6)+" "+resultAll.get(i+7)+" "+resultAll.get(i+8)+" "+resultAll.get(i+9));
         }
 
         return results; //리턴

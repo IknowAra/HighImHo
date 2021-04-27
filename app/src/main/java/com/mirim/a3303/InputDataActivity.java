@@ -92,6 +92,10 @@ public class InputDataActivity extends AppCompatActivity {
         int row2,col2; //두번째 문자의 행열 값을 담을 변수
 
         for (Integer[] twin : contents){ //리스트에서 문자쌍 배열을 읽어옴
+            if(twin.length ==1){ //공백일 경우
+                cipherSentence += "/ /"; //공백 그대로 저장
+                continue;
+            }
             row1=0; col1 = 0; row2=0; col2 = 0; //위치값 초기화
             for(int i = 0; i<10; i++){
                 for(int j = 0; j<10; j++){
@@ -107,16 +111,23 @@ public class InputDataActivity extends AppCompatActivity {
             }
 
             if(row1 == row2){ //같은 행에 있을경우
+                Log.d("암호화 전 데이터 ",keyBoard.get(row1)[col1] + " " + keyBoard.get(row1)[col2]);
                 if(col1 == 9){ col1 = -1; } //첫번째 값이 마지막 열일 경우
                 if(col2 == 9){ col2 = -1; } //두번째 값이 마지막 열일 경우
-                cipherSentence += keyBoard.get(row1)[col1+1] + " " + keyBoard.get(row1)[col2+1]; // 각각 밑에 있는 값을 추가
+
+                Log.d("암호화 후 데이터 ",keyBoard.get(row1)[col1+1] + " " + keyBoard.get(row1)[col2+1]);
+                cipherSentence +=  keyBoard.get(row1)[col2+1] + " " + keyBoard.get(row1)[col1+1]; // 각각 밑에 있는 값을 추가
 
             }else if(col1 == col2){ //같은 열에 있을경우
+                Log.d("암호화 전 데이터 ",keyBoard.get(row1)[col1] + " " + keyBoard.get(row2)[col1]);
                 if(row1 == 9){ row1 = -1; } //첫번째 값이 마지막 행일 경우
                 if(row2 == 9){ row2 = -1; } //두번째 값이 마지막 행일 경우
-                cipherSentence += keyBoard.get(row1+1)[col1] + " " + keyBoard.get(row2+1)[col1]; // 각각 오른쪽에 있는 값을 추가
+                Log.d("암호화 후 데이터 ",keyBoard.get(row1+1)[col1] + " " + keyBoard.get(row2+1)[col1]);
+                cipherSentence += keyBoard.get(row2+1)[col1] + " " + keyBoard.get(row1+1)[col1]; // 각각 오른쪽에 있는 값을 추가
             }else { //다른 행, 열에 있을경우
-                cipherSentence += keyBoard.get(row1)[col2] + " " + keyBoard.get(row2)[col1]; // 각각 교차하는 값 추가
+                Log.d("암호화 전 데이터 ",keyBoard.get(row1)[col1] + " " + keyBoard.get(row2)[col2]);
+                Log.d("암호화 후 데이터 ", keyBoard.get(row1)[col2] + " " + keyBoard.get(row2)[col1]);
+                cipherSentence +=  keyBoard.get(row2)[col1]+ " " + keyBoard.get(row1)[col2]; // 각각 교차하는 값 추가
             }
 
             cipherSentence += "/"; // 두개씩 묶어서 저장, 구분하기 위함
@@ -159,18 +170,25 @@ public class InputDataActivity extends AppCompatActivity {
         int i = 1; // while문 처리 변수
         while(asciiNum.size()>i){ // 배열 길이까지 반복
             //중복 글자일 경우
+            if(asciiNum.get(i-1)==32){ //공백일 경우
+                twinData.add(new Integer[]{32,0}); //값 하나만 추가
+                continue;
+            }
             if(asciiNum.get(i-1)==asciiNum.get(i)){
                 twinData.add(new Integer[]{ asciiNum.get(i-1),120 }); //중복 첫글자와 X의 아스키코드 120을 추가
+                Log.d("쌍자 묶음", asciiNum.get(i-1)+" "+(char)(int)(asciiNum.get(i-1))+" 120 X");
                 i++; //X를 추가했기 때문에 1만 추가
 
             }else{ //중복 글자가 아닐 경우
                 twinData.add(new Integer[]{ asciiNum.get(i-1),asciiNum.get(i) }); //두 글자 추가
+                Log.d("쌍자 묶음", asciiNum.get(i-1)+" "+(char)(int)(asciiNum.get(i-1))+" "+asciiNum.get(i)+(char)(int)(asciiNum.get(i)));
                 i+=2; //둘다 추가했기 때문에 2 추가
             }
         }
 
         if(asciiNum.size()==i){
             twinData.add(new Integer[]{asciiNum.get(asciiNum.size()-1),120});
+            Log.d("쌍자 묶음", asciiNum.get(asciiNum.size()-1)+" "+(char)(int)(asciiNum.get(asciiNum.size()-1))+"120 X");
         }
 
         return twinData;
@@ -186,11 +204,12 @@ public class InputDataActivity extends AppCompatActivity {
             //처리하지 않는 문자와 중복된 문자를 제외하고
             if(!resultAll.contains(num)){
                 resultAll.add(num); //데이터 추가
+                Log.d("중복제거와 문자열 처리한 키",num+ " ");
             }
         }
         // 나머지 값들을 추가
 
-        for(int i=99; i>=0; i--){
+        for(int i=0; i<100; i++){
             //중복되지 않은 값만 추가
             if(!resultAll.contains(usingNum.get(i)))
                 resultAll.add(usingNum.get(i));
@@ -201,7 +220,7 @@ public class InputDataActivity extends AppCompatActivity {
         for(int i = 0; i<100; i+=10){
             //리스트와 배열을 합친 2차원배열에 행 삽입
             results.add(new Integer[]{resultAll.get(i),resultAll.get(i+1),resultAll.get(i+2),resultAll.get(i+3),resultAll.get(i+4),resultAll.get(i+5),resultAll.get(i+6),resultAll.get(i+7),resultAll.get(i+8),resultAll.get(i+9)});
-            Log.d("암호판 ",resultAll.get(i)+" "+resultAll.get(i+1)+" "+resultAll.get(i+2)+" "+resultAll.get(i+3)+" "+resultAll.get(i+4)+" "+resultAll.get(i+5)+" "+resultAll.get(i+6)+" "+resultAll.get(i+7)+" "+resultAll.get(i+8)+" "+resultAll.get(i+9));
+            Log.d("사용자가 생성한 키로 만든 암호판 ",resultAll.get(i)+" "+resultAll.get(i+1)+" "+resultAll.get(i+2)+" "+resultAll.get(i+3)+" "+resultAll.get(i+4)+" "+resultAll.get(i+5)+" "+resultAll.get(i+6)+" "+resultAll.get(i+7)+" "+resultAll.get(i+8)+" "+resultAll.get(i+9));
         }
 
         return results; //리턴
