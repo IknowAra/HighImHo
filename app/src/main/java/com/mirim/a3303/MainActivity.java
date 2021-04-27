@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 container.addView(et);
                 final AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this,R.style.MyAlertDialogStyle);
                 alt_bld.setTitle("암호키 입력").setMessage("\n  쉿! 신중하게 입력하세요~\n\n").setIcon(R.drawable.ic_house_key).setCancelable(
-                        false).setView(container).setPositiveButton("확인",
+                        true).setView(container).setPositiveButton("확인",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 String key = et.getText().toString();

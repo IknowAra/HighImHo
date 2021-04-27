@@ -2,9 +2,13 @@ package com.mirim.a3303;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,9 +25,12 @@ import java.util.Arrays;
 public class InputDataActivity extends AppCompatActivity {
 
     final ArrayList<Integer> usingNum = new ArrayList<Integer>(Arrays.asList(97 , 98 , 99 , 100 , 101 , 102 , 103 , 104 , 105 , 106 , 107 , 108 , 109 , 110 , 111 , 112 , 113 , 114 , 115 , 116 , 117 , 118 , 119 , 120 , 121 , 122 , 200 , 201 , 202 , 203 , 204 , 205 , 206 , 207 , 208 , 209 , 210 , 211 , 212 , 213 , 214 , 215 , 216 , 217 , 218 , 300 , 301 , 302 , 303 , 304 , 305 , 306 , 307 , 308 , 309 , 310 , 311 , 312 , 313 , 314 , 315 , 316 , 317 , 318 , 319 , 320 , 400 , 401 , 402 , 403 , 404 , 405 , 406 , 407 , 408 , 409 , 410 , 411 , 412 , 413 , 414 , 415 , 416 , 417 , 418 , 419 , 420 , 421 , 422 , 423 , 424 , 425 , 426 , 427, 126, 33, 63, 46, 10, 32));
-    // 19개 200-218 초성 {"ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ", "ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"}
-    // 21개 300-320 중성 {"ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ", "ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"}
-    // 28개 400-427 종성 {"","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ", "ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"}
+    // 19개 200-218 초성
+    final ArrayList<String> CHO = new ArrayList<String>(Arrays.asList("ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ", "ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"));
+    // 21개 300-320 중성
+    final ArrayList<String> JOONG = new ArrayList<String>(Arrays.asList("ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ", "ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"));
+    // 28개 400-427 종성 {"X","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ", "ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"}
+    final ArrayList<String> JONG = new ArrayList<String>(Arrays.asList("X","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ", "ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"));
     // 26개 (+97) 알파벳 {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
     // 6개 126, 33, 63, 46, 10, 32 {"~", "!", "?", ".", "\n", " "}
 
@@ -53,14 +60,48 @@ public class InputDataActivity extends AppCompatActivity {
 
                 if (titleStr.length() > 0 && keyStr.length() > 0 && contentStr.length() > 0) {
                     if(!searchData(titleStr)){ //중복값이 없을때
-                        ArrayList<Integer[]> twinContents = addX(chrToAscii(contentStr)); // x를 추가한 문자쌍
+                        ArrayList<Integer> withSpace = chrToAscii(contentStr);
+                        String spaceIdx = "";
+                        int count = 0;
+                        ArrayList<Integer> withoutSpace = new ArrayList<Integer>();
+                        for(int i = 0; i<withSpace.size();i++){
+                            if(withSpace.get(i).equals(32)){
+
+                                spaceIdx += (i-count)+" ";
+
+                                count++;
+                            }else{
+                                withoutSpace.add(withSpace.get(i));
+                            }
+                        }
+                        Log.d("공백 위치", spaceIdx);
+                        ArrayList<Integer[]> twinContents = addX(withoutSpace); // x를 추가한 문자쌍
                         ArrayList<Integer[]> keyTable = setBoard(chrToAscii(keyStr)); //key로 테이블 생성
                         String cipherContents = makeCipher(keyTable,twinContents);
-                        saveFile(titleStr, cipherContents);
 
-                        Intent gotoMain = new Intent(InputDataActivity.this, MainActivity.class);
-                        gotoMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(gotoMain);
+                        String boardStr = asciiNumToString(keyTable);
+                        String contentsStr = asciiNumToString(twinContents);
+                        String cipherStr = asciiNumToString(twinData(cipherContents));
+
+
+
+                        final AlertDialog.Builder oDialog = new AlertDialog.Builder(InputDataActivity.this, R.style.MyAlertDialogStyle);
+                        String strHtml = "입력한 암호키 : "+keyStr+"\n\n암호판 :\n"+boardStr+"\n\n쌍자 문자 :\n"+contentsStr+"\n\n암호화 된 쌍자 문자 :\n"+cipherStr;
+
+
+                        String finalTitleStr = titleStr;
+                        String finalSpaceIdx = spaceIdx;
+                        oDialog.setTitle("다음 정보를 확인해주세요").setMessage(strHtml).setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        saveFile(finalTitleStr, cipherContents+"!"+ finalSpaceIdx);
+                                        Intent gotoMain = new Intent(InputDataActivity.this, MainActivity.class);
+                                        gotoMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(gotoMain);
+                                    }
+                        });
+                        AlertDialog alert = oDialog.create();
+                        alert.show();
 
                     }else{
                         Toast.makeText(InputDataActivity.this, "중복된 제목입니다 다른 제목을 입력해주세요!", Toast.LENGTH_SHORT).show();
@@ -84,6 +125,58 @@ public class InputDataActivity extends AppCompatActivity {
 
     }
 
+    //문자열을 정수형 배열로 가공하는 메서드
+    private ArrayList<Integer[]> twinData(String data){
+        ArrayList<Integer[]> twinData = new ArrayList<Integer[]>();
+        String subData = data.trim();
+        String date[] = subData.split("/");
+
+        for(String twin : date){
+            int idx = twin.indexOf(" ");
+            twinData.add(new Integer[]{ Integer.valueOf(twin.substring(0, idx)), Integer.valueOf(twin.substring(idx+1))});
+        }
+
+        return twinData;
+    }
+
+    private String asciiNumToString(ArrayList<Integer[]> asciiNum){
+        String resultStr = "";
+        String resultNum = "";
+
+        for(int i = 0; i<asciiNum.size(); i++){
+                for(int j = 0; j<asciiNum.get(i).length; j++){
+                    resultNum += asciiNum.get(i)[j]+" ";
+                    if(asciiNum.get(i)[j]>=200){
+                        if(asciiNum.get(i)[j]>=400){
+                            resultStr += JONG.get(asciiNum.get(i)[j]-400)+" ";
+                        }else if(asciiNum.get(i)[j]>=300){
+                            resultStr += JOONG.get(asciiNum.get(i)[j]-300)+" ";
+                        }else {
+                            resultStr += CHO.get(asciiNum.get(i)[j]-200)+" ";
+                        }
+                    }else if(asciiNum.get(i)[j].equals(10)){
+                        resultStr += "줄바꿈 ";
+                    }else if(asciiNum.get(i)[j].equals(32)) {
+                        resultStr += "'' ";
+                    }else{
+                        resultStr += (char)(int)asciiNum.get(i)[j]+" ";
+                    }
+                }
+
+            if(asciiNum.get(0).length >2){
+                resultStr += "\n";
+                resultNum += "\n";
+            }else {
+                resultStr += "/";
+                resultNum += "/";
+            }
+
+        }
+        Log.d("문자열 테이블",resultStr);
+        Log.d("정수형(아스키) 테이블", resultNum);
+        return resultStr;
+    }
+
 
     // 쌍자치환 암호화 contents 리턴 메소드
     private String makeCipher(ArrayList<Integer[]> keyBoard, ArrayList<Integer[]> contents){
@@ -92,10 +185,6 @@ public class InputDataActivity extends AppCompatActivity {
         int row2,col2; //두번째 문자의 행열 값을 담을 변수
 
         for (Integer[] twin : contents){ //리스트에서 문자쌍 배열을 읽어옴
-            if(twin.length ==1){ //공백일 경우
-                cipherSentence += "/ /"; //공백 그대로 저장
-                continue;
-            }
             row1=0; col1 = 0; row2=0; col2 = 0; //위치값 초기화
             for(int i = 0; i<10; i++){
                 for(int j = 0; j<10; j++){
@@ -116,14 +205,14 @@ public class InputDataActivity extends AppCompatActivity {
                 if(col2 == 9){ col2 = -1; } //두번째 값이 마지막 열일 경우
 
                 Log.d("암호화 후 데이터 ",keyBoard.get(row1)[col1+1] + " " + keyBoard.get(row1)[col2+1]);
-                cipherSentence +=  keyBoard.get(row1)[col2+1] + " " + keyBoard.get(row1)[col1+1]; // 각각 밑에 있는 값을 추가
+                cipherSentence +=  keyBoard.get(row1)[col1+1] + " " + keyBoard.get(row1)[col2+1]; // 각각 밑에 있는 값을 추가
 
             }else if(col1 == col2){ //같은 열에 있을경우
                 Log.d("암호화 전 데이터 ",keyBoard.get(row1)[col1] + " " + keyBoard.get(row2)[col1]);
                 if(row1 == 9){ row1 = -1; } //첫번째 값이 마지막 행일 경우
                 if(row2 == 9){ row2 = -1; } //두번째 값이 마지막 행일 경우
                 Log.d("암호화 후 데이터 ",keyBoard.get(row1+1)[col1] + " " + keyBoard.get(row2+1)[col1]);
-                cipherSentence += keyBoard.get(row2+1)[col1] + " " + keyBoard.get(row1+1)[col1]; // 각각 오른쪽에 있는 값을 추가
+                cipherSentence +=  keyBoard.get(row1+1)[col1] + " " + keyBoard.get(row2+1)[col1]; // 각각 오른쪽에 있는 값을 추가
             }else { //다른 행, 열에 있을경우
                 Log.d("암호화 전 데이터 ",keyBoard.get(row1)[col1] + " " + keyBoard.get(row2)[col2]);
                 Log.d("암호화 후 데이터 ", keyBoard.get(row1)[col2] + " " + keyBoard.get(row2)[col1]);
@@ -164,31 +253,30 @@ public class InputDataActivity extends AppCompatActivity {
         return result; //리턴
     }
 
+
     //홀수문자와 연속문자사이에 x를 추가하는 메서드
     private ArrayList<Integer[]> addX(ArrayList<Integer> asciiNum){
         ArrayList<Integer[]> twinData = new ArrayList<Integer[]>(); // 2xn 2차원배열로 쌍자생성
+
         int i = 1; // while문 처리 변수
         while(asciiNum.size()>i){ // 배열 길이까지 반복
+
             //중복 글자일 경우
-            if(asciiNum.get(i-1)==32){ //공백일 경우
-                twinData.add(new Integer[]{32,0}); //값 하나만 추가
-                continue;
-            }
             if(asciiNum.get(i-1)==asciiNum.get(i)){
                 twinData.add(new Integer[]{ asciiNum.get(i-1),120 }); //중복 첫글자와 X의 아스키코드 120을 추가
-                Log.d("쌍자 묶음", asciiNum.get(i-1)+" "+(char)(int)(asciiNum.get(i-1))+" 120 X");
+                Log.d("쌍자 묶음", asciiNum.get(i-1)+" "+(char)(int)(asciiNum.get(i-1))+" 120 x");
                 i++; //X를 추가했기 때문에 1만 추가
 
             }else{ //중복 글자가 아닐 경우
                 twinData.add(new Integer[]{ asciiNum.get(i-1),asciiNum.get(i) }); //두 글자 추가
-                Log.d("쌍자 묶음", asciiNum.get(i-1)+" "+(char)(int)(asciiNum.get(i-1))+" "+asciiNum.get(i)+(char)(int)(asciiNum.get(i)));
+                Log.d("쌍자 묶음", asciiNum.get(i-1)+" "+(char)(int)(asciiNum.get(i-1))+" "+asciiNum.get(i)+" "+(char)(int)(asciiNum.get(i)));
                 i+=2; //둘다 추가했기 때문에 2 추가
             }
         }
 
         if(asciiNum.size()==i){
             twinData.add(new Integer[]{asciiNum.get(asciiNum.size()-1),120});
-            Log.d("쌍자 묶음", asciiNum.get(asciiNum.size()-1)+" "+(char)(int)(asciiNum.get(asciiNum.size()-1))+"120 X");
+            Log.d("쌍자 묶음", asciiNum.get(asciiNum.size()-1)+" "+(char)(int)(asciiNum.get(asciiNum.size()-1))+"120 x");
         }
 
         return twinData;
@@ -202,7 +290,7 @@ public class InputDataActivity extends AppCompatActivity {
         ArrayList<Integer> resultAll = new ArrayList<Integer>(); //결과를 담을 리스트
         for(int num : asciiNum){
             //처리하지 않는 문자와 중복된 문자를 제외하고
-            if(!resultAll.contains(num)){
+            if(!resultAll.contains(num)&& num != 32){
                 resultAll.add(num); //데이터 추가
                 Log.d("중복제거와 문자열 처리한 키",num+ " ");
             }

@@ -43,6 +43,7 @@ public class MemoActivity extends AppCompatActivity {
         String key = intent.getExtras().getString("key").toLowerCase();
         ArrayList<Integer[]> keyTable = setBoard(chrToAscii(key));
         ArrayList<Integer[]> numData = new ArrayList<Integer[]>();
+        String plainText = "";
 
         FileInputStream fis = null;
         try {
@@ -55,12 +56,12 @@ public class MemoActivity extends AppCompatActivity {
         try {
             String data = dis.readUTF();
             numData = twinData(data);
+            ArrayList<Integer> decryption = makeDecryption(keyTable,numData);
+            plainText = toRawContents(decryption, data);
             dis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ArrayList<Integer> decryption = makeDecryption(keyTable,numData);
-        String plainText = toRawContents(decryption);
 
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -70,10 +71,11 @@ public class MemoActivity extends AppCompatActivity {
             }
         });
 
+        String finalPlainText = plainText;
         tx.setOnLongClickListener(new View.OnLongClickListener(){
             @Override
             public boolean onLongClick(View v) {
-                tx.setText(plainText);
+                tx.setText(finalPlainText);
                 tx.startAnimation(alphaAnimation);
                 return true;
             }
@@ -124,46 +126,52 @@ public class MemoActivity extends AppCompatActivity {
                 }
 
             }else { //다른 행, 열에 있을경우
-                if(keyBoard.get(row2)[col1] == 120){ //두번째 값이 x일 경우
-                    result.add(keyBoard.get(row1)[col2]);// x값을 제외
+                if(keyBoard.get(row1)[col2] == 120){ //두번째 값이 x일 경우
+                    result.add(keyBoard.get(row2)[col1]);// x값을 제외
                 }else{
-                    result.add(keyBoard.get(row1)[col2]); // 교차하는 값 추가
                     result.add(keyBoard.get(row2)[col1]); // 교차하는 값 추가
+                    result.add(keyBoard.get(row1)[col2]); // 교차하는 값 추가
                 }
             }
-
         }
-
-        return result; //암호화 된 문자열 리턴
+        for(int i :result){
+            Log.d("복호화된 숫자",i+" ");
+        }
+        return result; //복호화 된 배열 리턴
     }
 
 
     //아스키숫자로 된 데이터를 한글로 변환하는 메서드
-    private String toRawContents(ArrayList<Integer> numData){
+    private String toRawContents(ArrayList<Integer> numData, String data){
         String rawData = "";
-        int i = 0, cho = 0, joong = 0, jong = 0, temp = 0;
+        int cho = 0, joong = 0, jong = 0, temp = 0;
         char hangul;
+        String subData = data.trim();
+        int space = data.indexOf("!");
+        subData = subData.substring(space+1);
+        String spaceIdx[] = subData.split(" ");
 
-        while (i<numData.size()){
-            try{
-                if(numData.get(i)>=200 && numData.get(i+1) >=300 && numData.get(i+2) >=400){
+        for(int i = 0; i<numData.size(); i++){
+            if(Arrays.asList(spaceIdx).contains(i+"")){
+                rawData += " ";
+            }
+            if(numData.get(i)>=200){
+                try{
                     cho = numData.get(i) - 200;
                     joong = numData.get(i+1) - 300;
                     jong = numData.get(i+2) - 400;
                     hangul = (char) ((cho*21 +joong)*28 +jong + 0xAC00);
                     rawData += hangul;
-                    i+=3;
-                }else {
+                    i+=2;
+                }catch (Exception e){
                     temp = numData.get(i);
                     rawData += (char)temp;
-                    i++;
                 }
-            }catch (Exception e){
+
+            }else{
                 temp = numData.get(i);
                 rawData += (char)temp;
-                i++;
             }
-
         }
 
         return rawData;
@@ -173,10 +181,15 @@ public class MemoActivity extends AppCompatActivity {
     private ArrayList<Integer[]> twinData(String data){
         ArrayList<Integer[]> twinData = new ArrayList<Integer[]>();
         String subData = data.trim();
+        int space = data.indexOf("!");
+        subData = subData.substring(0,space-1);
+        Log.d("데이터 전체 ",subData);
         String date[] = subData.split("/");
+
         for(String twin : date){
             int idx = twin.indexOf(" ");
             twinData.add(new Integer[]{ Integer.valueOf(twin.substring(0, idx)), Integer.valueOf(twin.substring(idx+1))});
+            Log.d("묶음",Integer.valueOf(twin.substring(0, idx))+" "+ Integer.valueOf(twin.substring(idx+1)));
         }
 
         return twinData;
@@ -189,12 +202,12 @@ public class MemoActivity extends AppCompatActivity {
         ArrayList<Integer> resultAll = new ArrayList<Integer>(); //결과를 담을 리스트
         for(int num : asciiNum){
             //처리하지 않는 문자와 중복된 문자를 제외하고
-            if(!resultAll.contains(num)){
+            if(!resultAll.contains(num)&& num != 32){
                 resultAll.add(num); //데이터 추가
+                Log.d("중복제거와 문자열 처리한 키",num+ " ");
             }
         }
         // 나머지 값들을 추가
-
 
         for(int i=0; i<100; i++){
             //중복되지 않은 값만 추가
@@ -207,7 +220,7 @@ public class MemoActivity extends AppCompatActivity {
         for(int i = 0; i<100; i+=10){
             //리스트와 배열을 합친 2차원배열에 행 삽입
             results.add(new Integer[]{resultAll.get(i),resultAll.get(i+1),resultAll.get(i+2),resultAll.get(i+3),resultAll.get(i+4),resultAll.get(i+5),resultAll.get(i+6),resultAll.get(i+7),resultAll.get(i+8),resultAll.get(i+9)});
-            Log.d("입력 받은 키로 만든 암호판 ",resultAll.get(i)+" "+resultAll.get(i+1)+" "+resultAll.get(i+2)+" "+resultAll.get(i+3)+" "+resultAll.get(i+4)+" "+resultAll.get(i+5)+" "+resultAll.get(i+6)+" "+resultAll.get(i+7)+" "+resultAll.get(i+8)+" "+resultAll.get(i+9));
+            Log.d("사용자가 생성한 키로 만든 암호판 ",resultAll.get(i)+" "+resultAll.get(i+1)+" "+resultAll.get(i+2)+" "+resultAll.get(i+3)+" "+resultAll.get(i+4)+" "+resultAll.get(i+5)+" "+resultAll.get(i+6)+" "+resultAll.get(i+7)+" "+resultAll.get(i+8)+" "+resultAll.get(i+9));
         }
 
         return results; //리턴
