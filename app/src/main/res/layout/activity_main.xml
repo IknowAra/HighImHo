@@ -17,6 +17,13 @@
         android:gravity="right|bottom">
 
         <Button
+            android:id="@+id/goto_Test"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/t_icon"/>
+
+        <Button
             android:id="@+id/add_post"
             android:layout_width="30dp"
             android:layout_height="30dp"

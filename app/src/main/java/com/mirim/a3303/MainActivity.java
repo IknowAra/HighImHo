@@ -80,6 +80,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button goto_test = findViewById(R.id.goto_Test);
+        goto_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gotoTest = new Intent(getApplicationContext(), TestActivity.class);
+                startActivity(gotoTest);
+            }
+        });
+
 
 
 
