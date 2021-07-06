@@ -37,7 +37,10 @@ public class MemoActivity extends AppCompatActivity {
 
         TextView tx = findViewById(R.id.secretText);
         Button back = findViewById(R.id.back);
+        TextView title = findViewById(R.id.title);
         Animation alphaAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.alpha);
+        
+        title.setText(intent.getExtras().getString("fileName"));
 
         String fileName = intent.getExtras().getString("fileName")+".dat";
         String key = intent.getExtras().getString("key").toLowerCase();

@@ -285,13 +285,16 @@
             </TableRow>
         </TableLayout>
         <TextView
+            android:textSize="20dp"
             android:id="@+id/twinPureData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
             android:textColor="@color/black"
             android:layout_margin="4dp" />
+
         <TextView
+            android:textSize="20dp"
             android:id="@+id/cipherText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -304,7 +307,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="복호화 시작"/>
+
         <TextView
+            android:textSize="20dp"
             android:id="@+id/decryption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
